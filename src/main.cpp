@@ -7,11 +7,10 @@
 */
 
 #include <Arduino.h>
-#include <Arduino.h>
 #include "WIFIConnector_MKR1000.h"
 #include "MQTTConnector.h"
 
-const int PinBouton = 1;
+const int PinReedSwitch = 1;
 volatile int Compteur = 0;
 
 int PreviousCounter = 0;
@@ -28,8 +27,8 @@ void setup()
   MQTTConnect(); // Branchement au broker MQTT
 
   Serial.begin(9600);
-  pinMode(PinBouton, INPUT);
-  attachInterrupt(digitalPinToInterrupt(PinBouton), compteurBascule, FALLING);
+  pinMode(PinReedSwitch, INPUT);
+  attachInterrupt(digitalPinToInterrupt(PinReedSwitch), compteurBascule, FALLING);
 }
 
 void loop()
