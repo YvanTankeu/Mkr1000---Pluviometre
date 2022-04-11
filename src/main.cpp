@@ -13,6 +13,11 @@
 const int PinReedSwitch = 1;
 volatile int Compteur = 0;
 
+unsigned int tempsActuel = 0;
+unsigned int tempsPasse = 0; 
+unsigned int tempsNecessaire = 60000; // 1 min
+
+
 int PreviousCounter = 0;
 
 void compteurBascule()
@@ -22,7 +27,6 @@ void compteurBascule()
 
 void setup()
 {
-
   wifiConnect(); // Branchement au réseau WIFI
   MQTTConnect(); // Branchement au broker MQTT
 
@@ -33,16 +37,23 @@ void setup()
 
 void loop()
 {
+  
+  tempsActuel = millis();
+
   if (Compteur != PreviousCounter)
   {
     Serial.println(Compteur);
     PreviousCounter = Compteur;
+  }
 
-    // envoie le décompte
+  //Envoie du decompte sur thingsboard  après chaque 01 min
+  if ((tempsActuel - tempsPasse) >  tempsNecessaire){
+
     appendPayload("Compteur", Compteur);
     sendPayload();
 
     Compteur = 0;
-  }
+    tempsPasse = tempsActuel;
+  } 
 
 }
